@@ -196,3 +196,16 @@ body {
   float: left;
   width: calc(100% - 600px);
 }
+@media (max-width: 989px) {
+  .content {
+    width: 100%;
+  }
+  .content .main {
+    float: none;
+    width: 100%;
+  }
+  .content .right {
+    float: none;
+    width: 100%;
+  }
+}
