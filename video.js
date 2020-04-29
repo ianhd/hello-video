@@ -2,6 +2,16 @@ class Video {
     constructor(elementId, options) {
         this.elId = elementId;
         this.element = document.getElementById(elementId);
+
+        // add progress bar
+        this.element.insertAdjacentHTML('afterend',`
+            <progress id='${elementId}-progress' min='0' max='100' value='0'>0% played</progress>
+        `);
+        this.progress = document.getElementById(`${elementId}-progress`);
+        this.element.addEventListener('timeupdate', () => {
+            this.onTimeUpdate(this.element,this.progress);
+        }, false);
+
         this.multipleVideos = options.sources.length > 1;
         
         if (options.autoplay) this.element.setAttribute("autoplay","");
@@ -9,6 +19,11 @@ class Video {
     }
     setSource(sources) {
         this.element.setAttribute("src", sources[0].src);
+    }
+    onTimeUpdate(element, progress) {
+        var percentage = Math.floor((100 / element.duration) * element.currentTime);
+        progress.value = percentage;
+        progress.innerHTML = percentage + '% played';
     }
 }
 var vidOptions = {
