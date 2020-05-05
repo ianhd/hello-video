@@ -33,14 +33,15 @@ class Video {
     addControls() {
         this.wrapper.insertAdjacentHTML('beforeend', `
             <style>
-                #${this.elementId}-controls { position:absolute;top:0;left:0;width:100%; }
+                #${this.elementId}-controls { position:absolute;top:0;left:0;width:100%; transition: background .25s ease-in-out }
+                #${this.elementId}-controls:hover { background:rgba(0,0,0,.4); }
                 #${this.elementId}-controls [data-action] { opacity:0; transition: opacity .25s ease-in-out; }
                 #${this.elementId}-controls:hover [data-action] { opacity:0.5; }
                 #${this.elementId}-controls [data-action]:hover { opacity:0.9; }   
                 .mr-a { margin-right: auto; }
                 .ml-a { margin-left: auto; }
                 .mx-30 { margin-left: 30px; margin-right: 30px; }
-                .mainControls { display:flex; }
+                .mainControls { display:flex; top: 50%; position: absolute; left: 50%; margin-top: -30px; margin-left: -116px; }
                 .mainControls img { flex:1; max-width:60px; max-height:60px; }
             </style>
             <div id="${this.elementId}-controls">
@@ -84,6 +85,12 @@ class Video {
                         button.style.display = "none";
                         break;
                     case "rewind":
+                    case "fastForward":
+                        var adjustBy = action == "rewind" ? -15 : 15;
+                        var newTime = this.element.currentTime + adjustBy;
+                        if (newTime < 0) newTime = 0;
+                        else if (newTime > this.element.duration) newTime = audio.duration; // POTENTIAL ERROR - do we have to wait until "loadedmetadata" to get duration?
+                        this.element.currentTime = newTime;
                         break;
                     default:
                         throw "Player control not supported: " + action;
@@ -91,6 +98,7 @@ class Video {
             });
         });
     }
+
     onTimeUpdate(element, progress) {
         var percentage = Math.floor((100 / element.duration) * element.currentTime);
         progress.value = percentage;
