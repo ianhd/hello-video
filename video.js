@@ -3,11 +3,28 @@
 // }
 
 class Video {
+    debug(msg) {
+        document.getElementById("debug").insertAdjacentHTML('beforeend',`${msg}<br/>`);
+    }
     constructor(elementId, options) {
+        var that = this;
         this.elementId = elementId;
         this.element = document.getElementById(elementId);
         this.wrapper = this.element.parentNode;
         
+        // add hover class to wrapper when mouse is over it, or on touch for mobile
+        this.wrapper.onmouseover = function(e) {
+            e.currentTarget.classList.add("hover");
+            that.debug('onmouseover');
+        };
+        this.wrapper.onmouseout = function(e) {
+            e.currentTarget.classList.remove("hover");
+            that.debug('onmouseout');
+        };
+        this.wrapper.addEventListener("touchstart", function(e) {
+            that.debug('touchstart');
+        });
+
         // set basic css rules
         this.wrapper.style = "position:relative;";
         this.element.style = "position:absolute;top:0;left:0;width:100%;";
@@ -20,7 +37,6 @@ class Video {
         this.addControls();
 
         // loadedmetadata - set height of controls, which we don't know until video's meta data has loaded
-        var that = this;
         var controlWrapper = document.getElementById(`${this.elementId}-controls`);
         var durationCtrl = controlWrapper.querySelector(`[data-text='duration']`);
         this.element.addEventListener("loadedmetadata", function(e) {
