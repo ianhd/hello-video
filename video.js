@@ -58,6 +58,16 @@ class Video {
     setSource(sources) {
         this.video.setAttribute("src", sources[0].src);
     }
+    // utils() {
+    //     return {
+    //         isMobile: () => {
+
+    //         },
+    //         isNotMobile: () => {
+    //             return this.utils().isMobile();
+    //         }
+    //     };
+    // }
     timeToFriendly(time) {
         var hrs = ~~(time / 3600);
         var mins = ~~((time % 3600) / 60);
@@ -175,7 +185,7 @@ class Video {
 
         this.wrapper.onmouseover = function(e) {
             that.displayControls();
-            e.stopPropagation();
+            //e.stopPropagation();
             that.debug('onmouseover ' + e.currentTarget.id);
         };
         this.wrapper.addEventListener("touchstart", function(e) {
