@@ -4,13 +4,14 @@
 
 class Video {
     debug(msg) {
-        document.getElementById("debug").insertAdjacentHTML('beforeend',`${msg}<br/>`);
+        document.getElementById("debug").innerHTML = `${msg} ${Date.now()}`;
     }
     constructor(elementId, options) {
         var that = this;
         this.elementId = elementId;
         this.element = document.getElementById(elementId);
         this.wrapper = this.element.parentNode;
+        this.wrapper.id = `${elementId}-wrapper`;
         
         // add hover class to wrapper when mouse is over it, or on touch for mobile
         this.wrapper.onmouseover = function(e) {
@@ -81,9 +82,9 @@ class Video {
         this.wrapper.insertAdjacentHTML('beforeend', `
             <style>
                 #${this.elementId}-controls { position:absolute;top:0;left:0;width:100%; transition: background .25s ease-in-out }
-                #${this.elementId}-controls:hover { background:rgba(0,0,0,.4); }
+                #${this.elementId}-wrapper.hover #${this.elementId}-controls { background:rgba(0,0,0,.4); }
                 #${this.elementId}-controls [data-action], #${this.elementId}-controls [data-text] { opacity:0; transition: opacity .25s ease-in-out; }
-                #${this.elementId}-controls:hover [data-action], #${this.elementId}-controls:hover [data-text] { opacity:0.5; }
+                #${this.elementId}-wrapper.hover #${this.elementId}-controls [data-action], #${this.elementId}-wrapper.hover #${this.elementId}-controls [data-text] { opacity:0.5; }
                 #${this.elementId}-controls [data-action]:hover { opacity:0.9; }   
                 .mr-a { margin-right: auto; }
                 .ml-a { margin-left: auto; }
