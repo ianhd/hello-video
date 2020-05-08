@@ -13,17 +13,21 @@ class Video {
         this.wrapper = this.element.parentNode;
         this.wrapper.id = `${elementId}-wrapper`;
         
+        // set vol
+        this.element.volume = 1.0;
+
         // add hover class to wrapper when mouse is over it, or on touch for mobile
         this.wrapper.onmouseover = function(e) {
-            e.currentTarget.classList.add("hover");
-            that.debug('onmouseover');
+            that.displayControls();
+            that.debug('onmouseover ' + e.currentTarget.id);
         };
         this.wrapper.onmouseout = function(e) {
-            e.currentTarget.classList.remove("hover");
-            that.debug('onmouseout');
+            that.hideControls();
+            that.debug('onmouseout ' + e.currentTarget.id);
         };
         this.wrapper.addEventListener("touchstart", function(e) {
-            that.debug('touchstart');
+            that.displayControls();
+            that.debug('touchstart ' + e.currentTarget.id);
         });
 
         // set basic css rules
@@ -59,6 +63,12 @@ class Video {
             alert('touchstart');
         }, false);
     }
+    displayControls() {
+        this.wrapper.classList.add("hover");
+    }
+    hideControls() {
+        this.wrapper.classList.remove("hover");
+    }
     setSource(sources) {
         this.element.setAttribute("src", sources[0].src);
     }
@@ -84,8 +94,9 @@ class Video {
                 #${this.elementId}-controls { position:absolute;top:0;left:0;width:100%; transition: background .25s ease-in-out }
                 #${this.elementId}-wrapper.hover #${this.elementId}-controls { background:rgba(0,0,0,.4); }
                 #${this.elementId}-controls [data-action], #${this.elementId}-controls [data-text] { opacity:0; transition: opacity .25s ease-in-out; }
-                #${this.elementId}-wrapper.hover #${this.elementId}-controls [data-action], #${this.elementId}-wrapper.hover #${this.elementId}-controls [data-text] { opacity:0.5; }
-                #${this.elementId}-controls [data-action]:hover { opacity:0.9; }   
+                #${this.elementId}-wrapper.hover #${this.elementId}-controls [data-action], 
+                    #${this.elementId}-wrapper.hover #${this.elementId}-controls [data-text] { opacity:0.5; }
+                #${this.elementId}-wrapper.hover #${this.elementId}-controls [data-action]:hover { opacity:0.9; }   
                 .mr-a { margin-right: auto; }
                 .ml-a { margin-left: auto; }
                 .mx-30 { margin-left: 30px; margin-right: 30px; }
@@ -140,6 +151,13 @@ class Video {
                         if (newTime < 0) newTime = 0;
                         else if (newTime > this.element.duration) newTime = audio.duration; // POTENTIAL ERROR - do we have to wait until "loadedmetadata" to get duration?
                         this.element.currentTime = newTime;
+                        break;
+                    case "fullScreen":
+                        if (this.element.mozRequestFullScreen) {
+                            this.element.mozRequestFullScreen();
+                        } else if (this.element.webkitRequestFullScreen) {
+                            this.element.webkitRequestFullScreen();
+                        }                          
                         break;
                     default:
                         throw "Player control not supported: " + action;
