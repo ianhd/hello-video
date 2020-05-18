@@ -28,7 +28,7 @@ class Video {
         this.multipleVideos = options.sources.length > 1;
         if (this.multipleVideos) {
             this.skipText = options.skipText || "SKIP";
-            this.configMultipleVideos();
+            this.configMultipleVideos(options.sources);
         }
 
         // loadedmetadata - set height of controls, which we don't know until video's meta data has loaded
@@ -101,7 +101,7 @@ class Video {
         // video is muted
         this.wrapper.querySelector("[data-action='unMute']").style.display = 'none';
     }
-    configMultipleVideos() {
+    configMultipleVideos(sources) {
         var that = this;
         this.wrapper.insertAdjacentHTML('beforeend', `
             <div id="${this.elementId}-skip" style="cursor:default;color: white;font-size:13px;position:absolute;bottom:40px;right:20px;padding:10px 12px 9px 12px;background:#333;border-radius:3px;">
@@ -109,7 +109,9 @@ class Video {
             </div>
         `);
         document.getElementById(`${this.elementId}-skip`).addEventListener("click", (event) => {
-           alert('clicked'); 
+            that.video.setAttribute("src", sources[1].src);
+            event.currentTarget.style.display = 'none';
+            that.video.play();
         });
     }
     addControls() {
