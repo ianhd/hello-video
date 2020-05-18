@@ -19,13 +19,17 @@ class Video {
         // set basic css rules
         this.wrapper.style = "position:relative;";
         this.video.style = "position:absolute;top:0;left:0;width:100%;";
-
-        this.multipleVideos = options.sources.length > 1;
         
         this.setSource(options.sources);
         this.addControls();
         this.configVolume();
         this.configProgress();
+
+        this.multipleVideos = options.sources.length > 1;
+        if (this.multipleVideos) {
+            this.skipText = options.skipText || "SKIP";
+            this.configMultipleVideos();
+        }
 
         // loadedmetadata - set height of controls, which we don't know until video's meta data has loaded
         var controlWrapper = document.getElementById(`${this.elementId}-controls`);
@@ -50,9 +54,10 @@ class Video {
         if (this.timeoutId) clearTimeout(this.timeoutId); // clear any previous timeout
         this.timeoutId = setTimeout(() => {
             this.hideControls();
-        }, 3000);
+        }, 2500);
     }
     hideControls() {
+        if (this.timeoutId) clearTimeout(this.timeoutId); // clear any previous timeout
         this.wrapper.classList.remove("hover");
     }
     setSource(sources) {
@@ -96,12 +101,23 @@ class Video {
         // video is muted
         this.wrapper.querySelector("[data-action='unMute']").style.display = 'none';
     }
+    configMultipleVideos() {
+        var that = this;
+        this.wrapper.insertAdjacentHTML('beforeend', `
+            <div id="${this.elementId}-skip" style="cursor:default;color: white;font-size:13px;position:absolute;bottom:40px;right:20px;padding:10px 12px 9px 12px;background:#333;border-radius:3px;">
+                <span style="display:inline-block;float:left;margin-right:8px;">${this.skipText}</span><img style="width:15px;margin-top:2px" src="http://content.swncdn.com/videoplayer/next_white.svg?v=1" />
+            </div>
+        `);
+        document.getElementById(`${this.elementId}-skip`).addEventListener("click", (event) => {
+           alert('clicked'); 
+        });
+    }
     addControls() {
         var that = this;
         this.wrapper.insertAdjacentHTML('beforeend', `
             <style>
                 #${this.elementId}-controls { position:absolute;top:0;left:0;width:100%; transition: background .25s ease-in-out }
-                #${this.elementId}-wrapper.hover #${this.elementId}-controls { background:rgba(0,0,0,.4); }
+                #${this.elementId}-wrapper.hover #${this.elementId}-controls { background:rgba(0,0,0,.3); }
                 #${this.elementId}-controls .op-0 { opacity:0; transition: opacity .25s ease-in-out; }
                 #${this.elementId}-wrapper.hover #${this.elementId}-controls .op-0 { opacity:0.5; }
                 #${this.elementId}-wrapper.hover #${this.elementId}-controls [data-action]:hover,
@@ -185,9 +201,12 @@ class Video {
 
         this.wrapper.onmouseover = function(e) {
             that.displayControls();
-            //e.stopPropagation();
             that.debug('onmouseover ' + e.currentTarget.id);
         };
+        this.wrapper.onmouseout = function(e) {
+            //that.hideControls();
+            //that.debug('onmouseout ' + e.currentTarget.id);
+        };        
         this.wrapper.addEventListener("touchstart", function(e) {
             that.displayControls();
             that.debug('touchstart ' + e.currentTarget.id);
@@ -210,7 +229,8 @@ var vidOptions = {
         { 
             src: 'https://zcast.swncdn.com/episodes/zcast/greg-laurie-tv/2020/01-05/801572/802_2020128121316.mp4'
         }
-    ]
+    ],
+    skipText: 'SKIP to Full Message'
 };  
 var vid = new Video("vid", vidOptions);
 
