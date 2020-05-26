@@ -41,12 +41,25 @@ class Video {
             durationCtrl.innerHTML = that.timeToFriendly(e.currentTarget.duration);
         }, false);    
     }
+
+    updateProgressBar(percent) {
+        var inputRangeForegroundColor = 'white';
+        var inputRangeBackgroundColor = '#CCC';
+        this.progressBar.style.backgroundImage = `-webkit-gradient(linear, left top, right top, color-stop(${percent}%, ${inputRangeForegroundColor}), color-stop(${percent}%, ${inputRangeBackgroundColor}))`;
+        this.progressBar.style.backgroundImage = `-moz-linear-gradient(left center, ${inputRangeForegroundColor} 0%, ${inputRangeBackgroundColor} ${percent}%, ${inputRangeBackgroundColor} ${percent}%, ${inputRangeBackgroundColor} 100%)`;
+    }
+
     configProgress() {
         // timeupdate - update currentTime control
         var that = this;
         var currentTimeCtrl = this.wrapper.querySelector(`[data-text='currentTime']`);
         this.video.addEventListener("timeupdate", function(e) {
             currentTimeCtrl.innerHTML = that.timeToFriendly(e.currentTarget.currentTime);
+
+            var progressInPercentage = that.video.currentTime /  that.video.duration * 100;
+
+            that.progressBar.value = progressInPercentage;
+            that.updateProgressBar(progressInPercentage);
         });         
     }    
     displayControls() {
@@ -133,7 +146,12 @@ class Video {
                 .mainControls .seekContainer span { position: absolute; top: 22px; left: 18px; color: white; }
                 .upperRight { position:absolute;top:20px;right:20px; }
                 .upperRight img { display:inline-block;margin-left:20px; }
-                .bottom { position: absolute;bottom:20px;left:0; color: white;}
+                .bottom { width:100%; display:flex; padding: 0 10px 0 10px; position: absolute; bottom:15px; left:0; color: white;}
+                .bottom .progressBar { align-self: center; flex-grow: 2;  -webkit-appearance: none; -moz-apperance: none; border-radius: 10px; height: 8px; background-image: -webkit-gradient(linear, left top, right top, color-stop(0%, white), color-stop(0%, #CCC)); background-image: -moz-linear-gradient(left center, white 0%, white 0%, #CCC 0%, #CCC 100%);}
+                .bottom .progressBar::-moz-range-track { border: none; background: none; outline: none; }
+                .bottom .progressBar:focus { outline: none; border: none; }
+                .bottom .progressBar::-webkit-slider-thumb { -webkit-appearance: none !important; background-color: white; height: 13px; width: 13px; border-radius: 50%; }
+                .bottom .progressBar::-moz-range-thumb { -moz-appearance: none !important; background-color: white; border: none; height: 13px; width: 13px; border-radius: 50%; }
             </style>
             <div id="${this.elementId}-controls">
                 <div class="mainControls" style="display:flex;">
@@ -149,6 +167,7 @@ class Video {
                 </div>
                 <div class="bottom">
                     <span data-text="currentTime" class="op-0">0:00</span>
+                    <input type="range" class="progressBar op-0" min="0.01" max="100" step="0.01" value="0.01" />
                     <span data-text="duration" class="op-0"></span>
                 </div>
             </div>
@@ -213,6 +232,17 @@ class Video {
             that.displayControls();
             that.debug('touchstart ' + e.currentTarget.id);
         });  
+
+        this.progressBar = this.wrapper.getElementsByClassName('progressBar')[0];
+        this.progressBar.addEventListener("input", () => {
+            var val = (that.progressBar.value - that.progressBar.min) / (that.progressBar.max - that.progressBar.min);
+            var percent = val * 100;
+
+            that.updateProgressBar(percent);
+
+            var newCurrentTime = percent * that.video.duration / 100;
+            that.video.currentTime = newCurrentTime;
+        });
     }
     swapControls(triggerEl) {
         var toggleAction = triggerEl.getAttribute("data-toggle-action"); // play | pause                                            
