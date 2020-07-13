@@ -176,7 +176,6 @@ class Video {
         var controlWrapper = document.getElementById(`${this.elementId}-controls`);
         var controls = controlWrapper.querySelectorAll("[data-action]");
         controls.forEach(ctrl => {
-            debugger;   
             ctrl.addEventListener("click", (event) => {
                 var button = event.currentTarget;
                 var action = button.getAttribute("data-action"); // play | rewind | fastForward | pause | volume | fullScreen
