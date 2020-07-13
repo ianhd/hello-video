@@ -118,7 +118,7 @@ class Video {
         var that = this;
         this.wrapper.insertAdjacentHTML('beforeend', `
             <div id="${this.elementId}-skip" style="cursor:default;color: white;font-size:13px;position:absolute;bottom:40px;right:20px;padding:10px 12px 9px 12px;background:#333;border-radius:3px;">
-                <span style="display:inline-block;float:left;margin-right:8px;">${this.skipText}</span><img style="width:15px;margin-top:2px" src="http://content.swncdn.com/videoplayer/next_white.svg?v=1" />
+                <span style="display:inline-block;float:left;margin-right:8px;">${this.skipText}</span><img style="width:15px;margin-top:2px" src="https://content.swncdn.com/videoplayer/next_white.svg?v=1" />
             </div>
         `);
         document.getElementById(`${this.elementId}-skip`).addEventListener("click", (event) => {
@@ -176,6 +176,7 @@ class Video {
         var controlWrapper = document.getElementById(`${this.elementId}-controls`);
         var controls = controlWrapper.querySelectorAll("[data-action]");
         controls.forEach(ctrl => {
+            debugger;   
             ctrl.addEventListener("click", (event) => {
                 var button = event.currentTarget;
                 var action = button.getAttribute("data-action"); // play | rewind | fastForward | pause | volume | fullScreen
