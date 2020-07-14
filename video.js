@@ -126,6 +126,8 @@ class Video {
             this.playedAtLeastOnce = false;
             this.showLoadingIconIfNeeded();
             that.video.play();
+            var playButton = document.querySelector("[data-action='play']");
+            that.swapControls(playButton);
         });
     }
 
