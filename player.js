@@ -2,19 +2,19 @@
 //     constructor()
 // }
 
-class Video {
+class Player {
     debug(msg) {
         document.getElementById("debug").innerHTML = `${msg} ${Date.now()}`;
     }
     constructor(elementId, options) {
         var that = this;
         this.elementId = elementId;
-        this.video = document.getElementById(elementId);
-        this.wrapper = this.video.parentNode;
-        this.wrapper.id = `${elementId}-wrapper`;
+        this.wrapper = document.getElementById(elementId);
+        this.wrapper.id = `${elementId}`;
 
-        if (options.poster) this.video.setAttribute("poster",options.poster);
-        if (options.autoplay) this.video.setAttribute("autoplay","");
+        this.createVideo(options);
+
+        this.wrapper.appendChild(this.video);
 
         // set basic css rules
         this.wrapper.style = "position:relative;";
@@ -38,6 +38,19 @@ class Video {
         }, false);    
 
         this.configVideoLoadingIcon();
+    }
+
+    createVideo(options){
+        var video = document.createElement("video");
+        var options = {
+            preload: "metadata",
+            playsinline: true,
+            poster: options.poster,
+            autoplay: options.autoplay
+        };
+
+        Object.assign(video, options);
+        this.video = video;
     }
 
     updateProgressBar(percent) {
@@ -143,11 +156,11 @@ class Video {
         this.wrapper.insertAdjacentHTML('beforeend', `
             <style>
                 #${this.elementId}-controls { position:absolute;top:0;left:0;width:100%; transition: background .25s ease-in-out }
-                #${this.elementId}-wrapper.hover #${this.elementId}-controls { background:rgba(0,0,0,.3); }
+                #${this.elementId}.hover #${this.elementId}-controls { background:rgba(0,0,0,.3); }
                 #${this.elementId}-controls .op-0 { opacity:0; transition: opacity .25s ease-in-out; }
-                #${this.elementId}-wrapper.hover #${this.elementId}-controls .op-0 { opacity:0.5; }
-                #${this.elementId}-wrapper.hover #${this.elementId}-controls [data-action]:hover,
-                    #${this.elementId}-wrapper.hover #${this.elementId}-controls .seekContainer:hover span { opacity:0.9; }   
+                #${this.elementId}.hover #${this.elementId}-controls .op-0 { opacity:0.5; }
+                #${this.elementId}.hover #${this.elementId}-controls [data-action]:hover,
+                #${this.elementId}.hover #${this.elementId}-controls .seekContainer:hover span { opacity:0.9; }   
                 .mr-a { margin-right: auto; }
                 .ml-a { margin-left: auto; }
                 .mx-30 { margin-left: 30px; margin-right: 30px; }
@@ -183,7 +196,7 @@ class Video {
                     <span data-text="duration" class="op-0"></span>
                 </div>
             </div>
-        `);
+        `)
 
         var controlWrapper = document.getElementById(`${this.elementId}-controls`);
         var controls = controlWrapper.querySelectorAll("[data-action]");
@@ -302,5 +315,5 @@ var vidOptions = {
     skipText: 'SKIP to Full Message',
     skipTextMobile: "SKIP (Mobile)"
 };  
-var vid = new Video("vid", vidOptions);
+new Player("player", vidOptions);
 
