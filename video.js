@@ -125,6 +125,8 @@ class Video {
             that.video.setAttribute("src", sources[1].src);
             event.currentTarget.style.display = 'none';
             that.video.play();
+            var playButton = document.querySelector("[data-action='play']");
+            that.swapControls(playButton);
         });
     }
     addControls() {
