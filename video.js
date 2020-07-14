@@ -40,6 +40,8 @@ class Video {
             that.wrapper.style.height = videoHeight + "px"; // for good measure, also set height of wrapping div around this whole thing
             durationCtrl.innerHTML = that.timeToFriendly(e.currentTarget.duration);
         }, false);    
+
+        this.configVideoLoadingIcon();
     }
 
     updateProgressBar(percent) {
@@ -54,12 +56,14 @@ class Video {
         var that = this;
         var currentTimeCtrl = this.wrapper.querySelector(`[data-text='currentTime']`);
         this.video.addEventListener("timeupdate", function(e) {
-            currentTimeCtrl.innerHTML = that.timeToFriendly(e.currentTarget.currentTime);
+            if (that.video.currentTime && that.video.duration){
+                currentTimeCtrl.innerHTML = that.timeToFriendly(e.currentTarget.currentTime);
 
-            var progressInPercentage = that.video.currentTime /  that.video.duration * 100;
-
-            that.progressBar.value = progressInPercentage;
-            that.updateProgressBar(progressInPercentage);
+                var progressInPercentage = that.video.currentTime /  that.video.duration * 100;
+    
+                that.progressBar.value = progressInPercentage;
+                that.updateProgressBar(progressInPercentage);
+            }
         });         
     }    
     displayControls() {
@@ -124,9 +128,20 @@ class Video {
         document.getElementById(`${this.elementId}-skip`).addEventListener("click", (event) => {
             that.video.setAttribute("src", sources[1].src);
             event.currentTarget.style.display = 'none';
+            
+            this.playedAtLeastOnce = false;
+            this.showLoadingIconIfNeeded();
             that.video.play();
         });
     }
+
+    configVideoLoadingIcon(){
+        var that = this;
+        this.video.addEventListener("play", function(){
+            that.hideLoadingIconIfNeeded();
+        });
+    }
+
     addControls() {
         var that = this;
         this.wrapper.insertAdjacentHTML('beforeend', `
@@ -156,8 +171,9 @@ class Video {
             <div id="${this.elementId}-controls">
                 <div class="mainControls" style="display:flex;">
                     <div class='seekContainer'><span class="op-0">10</span><img data-action="rewind" class="ml-a op-0" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODUiIHZpZXdCb3g9IjAgMCA4MCA4NSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48dGl0bGU+MTBzIGJhY2s8L3RpdGxlPjxwYXRoIGQ9Ik0xNS4xOTcgMTQuNDc4bDMuMjY4IDEuNzUzQzkuNDk1IDIyLjc5IDMuNjYyIDMzLjM4NyAzLjY2MiA0NS4zNTJjMCAxOS45MTMgMTYuMTQzIDM2LjA1NiAzNi4wNTYgMzYuMDU2IDE5LjkxNCAwIDM2LjA1Ny0xNi4xNDMgMzYuMDU3LTM2LjA1NiAwLTE4LjI0LTEzLjU0Ny0zMy4zMDgtMzEuMTI3LTM1LjcxM3Y0Ljg2OHMuMDA4Ljk2OC0uMzA1IDEuMTAzYy0uNDI1LjE4My0xLjA0LS4yMjQtMS4wNC0uMjI0TDMxLjQyOCA5LjA0OXMtLjgxOC0uMzg2LS44MTgtLjc0YzAtLjQyMi44MTYtLjc5Ny44MTYtLjc5N0w0My42Ljg5OHMuMzY4LS4yNjQuNzcyLS4wNDhjLjI5LjE1NC4yNzYuODIzLjI3Ni44MjNWNi4yNGMxOS40NTEgMi40MjcgMzQuNTA3IDE5LjAwNCAzNC41MDcgMzkuMTEzIDAgMjEuNzgtMTcuNjU2IDM5LjQzNy0zOS40MzcgMzkuNDM3LTIxLjc4IDAtMzkuNDM2LTE3LjY1Ny0zOS40MzYtMzkuNDM3IDAtMTIuNTEgNS44My0yMy42NSAxNC45MTUtMzAuODc0IiBmaWxsPSIjRkZGIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiLz48L3N2Zz4="></div>
-                    <img data-action="play" data-toggle-action="pause" class="mx-30 op-0" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI5MCIgaGVpZ2h0PSI5MCIgdmlld0JveD0iMCAwIDkwIDkwIj48cGF0aCBmaWxsPSIjRkZGIiBkPSJNODguMTY0IDQyLjc2MWMyLjQ0NyAxLjIzNyAyLjQ0NyAzLjI0MSAwIDQuNDc4TDQuNDM0IDg5LjUxNEMxLjk4NSA5MC43NSAwIDg5LjU0NyAwIDg2LjgzVjMuMTY5QzAgLjQ1IDEuOTg1LS43NTEgNC40MzQuNDg2bDgzLjczIDQyLjI3NXoiLz48L3N2Zz4=">
-                    <img data-action="pause" data-toggle-action="play" style="display:none;width:90px;" class="mx-30 op-0" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI3NSIgaGVpZ2h0PSI5NSIgdmlld0JveD0iMCAwIDc1IDk1Ij48cGF0aCBmaWxsPSIjRkZGIiBkPSJNMCAwaDI1djk1SDB6TTUwIDBoMjV2OTVINTB6Ii8+PC9zdmc+">
+                    <img  id="${this.elementId}-play-button" data-action="play" data-toggle-action="pause" class="mx-30 op-0" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI5MCIgaGVpZ2h0PSI5MCIgdmlld0JveD0iMCAwIDkwIDkwIj48cGF0aCBmaWxsPSIjRkZGIiBkPSJNODguMTY0IDQyLjc2MWMyLjQ0NyAxLjIzNyAyLjQ0NyAzLjI0MSAwIDQuNDc4TDQuNDM0IDg5LjUxNEMxLjk4NSA5MC43NSAwIDg5LjU0NyAwIDg2LjgzVjMuMTY5QzAgLjQ1IDEuOTg1LS43NTEgNC40MzQuNDg2bDgzLjczIDQyLjI3NXoiLz48L3N2Zz4=">
+                    <img id="${this.elementId}-loading-icon" style="display:none;width:90px; -webkit-animation: rotation 1.25s infinite linear;" class="mx-30 op-0 loading" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDI0LjAuMywgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDYuMDAgQnVpbGQgMCkgIC0tPgo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkxheWVyXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IgoJIHZpZXdCb3g9IjAgMCAyNCAyNCIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgMjQgMjQ7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4KPHN0eWxlIHR5cGU9InRleHQvY3NzIj4KCS5zdDB7ZmlsbDpub25lO30KCS5zdDF7ZmlsbDojRkZGRkZGO30KCS5zdDJ7b3BhY2l0eTowLjQ0O2ZpbGw6I0ZGRkZGRjtlbmFibGUtYmFja2dyb3VuZDpuZXcgICAgO30KCS5zdDN7b3BhY2l0eTowLjkzO2ZpbGw6I0ZGRkZGRjt9Cgkuc3Q0e29wYWNpdHk6MC4zNztmaWxsOiNGRkZGRkY7ZW5hYmxlLWJhY2tncm91bmQ6bmV3ICAgIDt9Cgkuc3Q1e29wYWNpdHk6MC43OTtmaWxsOiNGRkZGRkY7ZW5hYmxlLWJhY2tncm91bmQ6bmV3ICAgIDt9Cgkuc3Q2e29wYWNpdHk6MC4yMztmaWxsOiNGRkZGRkY7ZW5hYmxlLWJhY2tncm91bmQ6bmV3ICAgIDt9Cgkuc3Q3e29wYWNpdHk6MC42NTtmaWxsOiNGRkZGRkY7ZW5hYmxlLWJhY2tncm91bmQ6bmV3ICAgIDt9Cgkuc3Q4e29wYWNpdHk6OS4wMDAwMDBlLTAyO2ZpbGw6I0ZGRkZGRjtlbmFibGUtYmFja2dyb3VuZDpuZXcgICAgO30KCS5zdDl7b3BhY2l0eTowLjUxO2ZpbGw6I0ZGRkZGRjtlbmFibGUtYmFja2dyb3VuZDpuZXcgICAgO30KCS5zdDEwe29wYWNpdHk6MDtmaWxsOiNGRkZGRkY7ZW5hYmxlLWJhY2tncm91bmQ6bmV3ICAgIDt9Cgkuc3QxMXtvcGFjaXR5OjAuNzI7ZmlsbDojRkZGRkZGO2VuYWJsZS1iYWNrZ3JvdW5kOm5ldyAgICA7fQoJLnN0MTJ7b3BhY2l0eTowLjE2O2ZpbGw6I0ZGRkZGRjtlbmFibGUtYmFja2dyb3VuZDpuZXcgICAgO30KCS5zdDEze29wYWNpdHk6MC44NjtmaWxsOiNGRkZGRkY7ZW5hYmxlLWJhY2tncm91bmQ6bmV3ICAgIDt9Cgkuc3QxNHtvcGFjaXR5OjAuMztmaWxsOiNGRkZGRkY7ZW5hYmxlLWJhY2tncm91bmQ6bmV3ICAgIDt9Cgkuc3QxNXtvcGFjaXR5OjAuNTg7ZmlsbDojRkZGRkZGO2VuYWJsZS1iYWNrZ3JvdW5kOm5ldyAgICA7fQoJLnN0MTZ7b3BhY2l0eToyLjAwMDAwMGUtMDI7ZmlsbDojRkZGRkZGO2VuYWJsZS1iYWNrZ3JvdW5kOm5ldyAgICA7fQo8L3N0eWxlPgo8cmVjdCBjbGFzcz0ic3QwIiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiLz4KPGNpcmNsZSBjbGFzcz0ic3QxIiBjeD0iMTIiIGN5PSIzIiByPSIxLjIiLz4KPGNpcmNsZSBjbGFzcz0ic3QyIiBjeD0iMTIiIGN5PSIyMSIgcj0iMS4yIi8+CjxjaXJjbGUgY2xhc3M9InN0MyIgY3g9IjguNCIgY3k9IjMuNyIgcj0iMS4yIi8+CjxjaXJjbGUgY2xhc3M9InN0NCIgY3g9IjE1LjYiIGN5PSIyMC4zIiByPSIxLjIiLz4KPGNpcmNsZSBjbGFzcz0ic3Q1IiBjeD0iMy42IiBjeT0iOC43IiByPSIxLjIiLz4KPGNpcmNsZSBjbGFzcz0ic3Q2IiBjeD0iMjAuNCIgY3k9IjE1LjMiIHI9IjEuMiIvPgo8Y2lyY2xlIGNsYXNzPSJzdDciIGN4PSIzLjciIGN5PSIxNS42IiByPSIxLjIiLz4KPGNpcmNsZSBjbGFzcz0ic3Q4IiBjeD0iMjAuMyIgY3k9IjguNCIgcj0iMS4yIi8+CjxjaXJjbGUgY2xhc3M9InN0OSIgY3g9IjguNyIgY3k9IjIwLjQiIHI9IjEuMiIvPgo8Y2lyY2xlIGNsYXNzPSJzdDEwIiBjeD0iMTUuMyIgY3k9IjMuNiIgcj0iMS4zIi8+CjxjaXJjbGUgY2xhc3M9InN0MTEiIGN4PSIzIiBjeT0iMTIiIHI9IjEuMiIvPgo8Y2lyY2xlIGNsYXNzPSJzdDEyIiBjeD0iMjEiIGN5PSIxMiIgcj0iMS4yIi8+CjxjaXJjbGUgY2xhc3M9InN0MTMiIGN4PSI1LjYiIGN5PSI1LjYiIHI9IjEuMiIvPgo8Y2lyY2xlIGNsYXNzPSJzdDE0IiBjeD0iMTguNCIgY3k9IjE4LjQiIHI9IjEuMiIvPgo8Y2lyY2xlIGNsYXNzPSJzdDE1IiBjeD0iNS42IiBjeT0iMTguNCIgcj0iMS4yIi8+CjxjaXJjbGUgY2xhc3M9InN0MTYiIGN4PSIxOC40IiBjeT0iNS42IiByPSIxLjIiLz4KPC9zdmc+Cg==">
+                    <img id="${this.elementId}-pause-button" data-action="pause" data-toggle-action="play" style="display:none;width:90px;" class="mx-30 op-0" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI3NSIgaGVpZ2h0PSI5NSIgdmlld0JveD0iMCAwIDc1IDk1Ij48cGF0aCBmaWxsPSIjRkZGIiBkPSJNMCAwaDI1djk1SDB6TTUwIDBoMjV2OTVINTB6Ii8+PC9zdmc+">
                     <div class='seekContainer'><span class="op-0">10</span><img data-action="fastForward" class="mr-a op-0" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODUiIHZpZXdCb3g9IjAgMCA4MCA4NSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48dGl0bGU+MTBzIGZvcndhcmQ8L3RpdGxlPjxwYXRoIGQ9Ik02NC4yNCAxNC40NzhsLTMuMjY5IDEuNzUzYzguOTcyIDYuNTU5IDE0LjgwNCAxNy4xNTYgMTQuODA0IDI5LjEyMSAwIDE5LjkxMy0xNi4xNDMgMzYuMDU2LTM2LjA1NyAzNi4wNTYtMTkuOTEzIDAtMzYuMDU2LTE2LjE0My0zNi4wNTYtMzYuMDU2IDAtMTguMjQgMTMuNTQ3LTMzLjMwOCAzMS4xMjctMzUuNzEzdjQuODY4cy0uMDA4Ljk2OC4zMDUgMS4xMDNjLjQyNS4xODMgMS4wNC0uMjI0IDEuMDQtLjIyNEw0OC4wMSA5LjA0OXMuODE4LS4zODYuODE4LS43NGMwLS40MjItLjgxNy0uNzk3LS44MTctLjc5N0wzNS44MzcuODk4cy0uMzY5LS4yNjQtLjc3Mi0uMDQ4Yy0uMjkuMTU0LS4yNzYuODIzLS4yNzYuODIzVjYuMjRDMTUuMzM3IDguNjY2LjI4MiAyNS4yNDMuMjgyIDQ1LjM1MmMwIDIxLjc4IDE3LjY1NiAzOS40MzcgMzkuNDM2IDM5LjQzN3MzOS40MzctMTcuNjU3IDM5LjQzNy0zOS40MzdjMC0xMi41MS01LjgzMS0yMy42NS0xNC45MTUtMzAuODc0IiBmaWxsPSIjRkZGIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiLz48L3N2Zz4="></div>
                 </div>
                 <div class="upperRight">
@@ -185,6 +201,7 @@ class Video {
                     case "pause":
                         this.swapControls(button);
                         if (this.video.paused) {
+                            this.showLoadingIconIfNeeded();
                             this.video.play();
                         } else {
                             this.video.pause();
@@ -231,7 +248,7 @@ class Video {
         this.wrapper.addEventListener("touchstart", function(e) {
             that.displayControls();
             that.debug('touchstart ' + e.currentTarget.id);
-        });  
+        },  {passive: true});  
 
         this.progressBar = this.wrapper.getElementsByClassName('progressBar')[0];
         this.progressBar.addEventListener("input", () => {
@@ -243,12 +260,36 @@ class Video {
             var newCurrentTime = percent * that.video.duration / 100;
             that.video.currentTime = newCurrentTime;
         });
+
+        this.pauseButton = document.getElementById(this.elementId+ '-pause-button');
+        this.playButton = document.getElementById(this.elementId+ '-play-button');
+        this.loadingIcon = document.getElementById(this.elementId+ '-loading-icon');
     }
     swapControls(triggerEl) {
         var toggleAction = triggerEl.getAttribute("data-toggle-action"); // play | pause                                            
         var ctrlToToggle = document.getElementById(`${this.elementId}-controls`).querySelector(`[data-action='${toggleAction}']`);        
         ctrlToToggle.style.display = "inline-block";
         triggerEl.style.display = "none";        
+    }
+
+    showLoadingIconIfNeeded(){
+        if (!this.playedAtLeastOnce){
+            this.playedAtLeastOnce = true;
+            this.pauseButton.style.display = 'none';
+            this.playButton.style.display = 'none';
+            this.loadingIcon.style.display = 'inline-block'
+        }
+    }
+
+    hideLoadingIconIfNeeded(){
+        if (this.loadingIcon.style.display == 'inline-block'){
+            this.loadingIcon.style.display = 'none';
+
+            if (this.pauseButton.style.display == 'none')
+                this.pauseButton.style.display = 'inline-block';
+            else if (this.playButton.style.display == 'none')
+                this.playButton.style.display = 'inline-block';
+        }
     }
 }
 var vidOptions = {
