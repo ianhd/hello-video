@@ -111,13 +111,13 @@ class Video {
         var multipleVideos = options.sources.length > 1;
         if (!multipleVideos) return;
         
-        var skipText = (this.isMobile() ? options.skipTextOnMobile : options.skipText) || "SKIP";
+        var skipText = (this.isMobile() ? options.skipTextMobile : options.skipText) || "SKIP";
         this.wrapper.insertAdjacentHTML('beforeend', `
             <div id="${this.elementId}-skip" style="cursor:default;color: white;font-size:13px;position:absolute;bottom:40px;right:20px;padding:10px 12px 9px 12px;background:#333;border-radius:3px;">
                 <span style="display:inline-block;float:left;margin-right:8px;">${skipText}</span><img style="width:15px;margin-top:2px" src="https://content.swncdn.com/videoplayer/next_white.svg?v=1" />
             </div>
         `);
-        
+
         var that = this;
         document.getElementById(`${this.elementId}-skip`).addEventListener("click", (event) => {
             that.video.setAttribute("src", options.sources[1].src);
@@ -300,7 +300,7 @@ var vidOptions = {
         }
     ],
     skipText: 'SKIP to Full Message',
-    skipTextOnMobile: "SKIP (Mobile)"
+    skipTextMobile: "SKIP (Mobile)"
 };  
 var vid = new Video("vid", vidOptions);
 
