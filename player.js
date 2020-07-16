@@ -220,7 +220,7 @@ class Player {
                 .audioOnly video { display: none; }
                 .audioOnly audio { outline-width: 0; }
                 .audioOnly .goBackToVideo { display: block; }
-                .audioOnly .goBackToVideo .container { width: 37%; padding: 10px 15px 15px 15px; margin: 0 auto; margin-top: 14%; text-align: center; background: rgba(0,0,0,0.6); color: white; padding-bottom: 20px; border-radius: 5px;  }
+                .audioOnly .goBackToVideo .container { width: 58%; padding: 10px 15px 15px 15px; margin: 0 auto; margin-top: 8%; text-align: center; background: rgba(0,0,0,0.6); color: white; padding-bottom: 20px; border-radius: 5px;  }
                 .audioOnly .goBackToVideo .container .audioOnlyIcon { height: 80px; opacity: 0.7; }
                 .audioOnly .goBackToVideo .container .nowPlaying { opacity: 0.7; }
                 .audioOnly .goBackToVideo .container .goBackToVideoButton { margin-top: 30px; }
