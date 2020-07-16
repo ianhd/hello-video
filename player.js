@@ -221,8 +221,7 @@ class Player {
                 .audioOnly audio { outline-width: 0; }
                 .audioOnly .goBackToVideo { display: block; }
                 .audioOnly .goBackToVideo .container { width: 58%; padding: 10px 15px 15px 15px; margin: 0 auto; margin-top: 8%; text-align: center; background: rgba(0,0,0,0.6); color: white; padding-bottom: 20px; border-radius: 5px;  }
-                .audioOnly .goBackToVideo .container .audioOnlyIcon { height: 80px; opacity: 0.7; }
-                .audioOnly .goBackToVideo .container .nowPlaying { opacity: 0.7; }
+                .audioOnly .goBackToVideo .container .audioOnlyIcon { height: 80px; }
                 .audioOnly .goBackToVideo .container .goBackToVideoButton { margin-top: 30px; }
                 .audioOnly .goBackToVideo .container .goBackToVideoButton .goBackToVideoIcon { height: 20px; }
                 .audioOnly .goBackToVideo .container .goBackToVideoButton span { margin-left: 10px; position: relative; top: -4px; }
