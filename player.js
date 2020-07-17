@@ -30,6 +30,7 @@ class Player {
 
     createVideo(){
         var video = document.createElement("video");
+        video.setAttribute('crossOrigin', 'anonymous');
         var videoOptions = {
             preload: "metadata",
             playsinline: true,
@@ -89,6 +90,7 @@ class Player {
         this.progressBar.style.backgroundImage = `-webkit-gradient(linear, left top, right top, color-stop(${percent}%, ${inputRangeForegroundColor}), color-stop(${percent}%, ${inputRangeBackgroundColor}))`;
         this.progressBar.style.backgroundImage = `-moz-linear-gradient(left center, ${inputRangeForegroundColor} 0%, ${inputRangeBackgroundColor} ${percent}%, ${inputRangeBackgroundColor} ${percent}%, ${inputRangeBackgroundColor} 100%)`;
     }  
+    
     displayControls() {
         if (this.isAudioMode()) return;
 
@@ -306,6 +308,7 @@ class Player {
                         }
                         break;
                     case "audioOnly":
+                        that.updateBackgroundImageToScreenshot();
                         that.video.pause();
                         that.hideControls();
                         that.addClassToWrapper(this.audioOnlyClassName);
@@ -379,6 +382,34 @@ class Player {
         this.goBackArrowBase64 = "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pg0KPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDE4LjEuMSwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDYuMDAgQnVpbGQgMCkgIC0tPg0KPHN2ZyB2ZXJzaW9uPSIxLjEiIGlkPSJDYXBhXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4Ig0KCSB2aWV3Qm94PSIwIDAgNDkuNDk5IDQ5LjQ5OSIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgNDkuNDk5IDQ5LjQ5OTsiIHhtbDpzcGFjZT0icHJlc2VydmUiPg0KPGc+DQoJPHBhdGggc3R5bGU9ImZpbGw6I0ZGRkZGRjsiIGQ9Ik04LjE0MywxMC44MDRDNy40NzMsMTEuNjgyLDcsMTEuODQyLDcsMTEuMDk5VjkuNzUxYzAtMS45MzMtMS41NjctMy41LTMuNS0zLjVTMCw3LjgxOCwwLDkuNzUxdjEyDQoJCWMwLDEuOTMzLDEuNTY3LDMuNSwzLjUsMy41aDEyYzEuOTMzLDAsMy41LTEuNTY3LDMuNS0zLjVzLTEuNTY3LTMuNS0zLjUtMy41YzAsMC0wLjU3OSwwLTEuMjk0LDBzLTAuOTE2LTAuODE3LTAuMzEtMS43NA0KCQljMi43NTItNC4xODcsNy40Ny02Ljc5NSwxMi41NjktNi43OTVjOC4yOSwwLDE1LjAzNCw2Ljc0NCwxNS4wMzQsMTUuMDM0YzAsOC4yODktNi43NDQsMTUuMDMzLTE1LjAzNCwxNS4wMzNjLTIuMjA5LDAtNCwxLjc5MS00LDQNCgkJczEuNzkxLDQsNCw0YzEyLjcwMSwwLjAwMSwyMy4wMzQtMTAuMzMyLDIzLjAzNC0yMy4wMzJjMC0xMi43MDEtMTAuMzMzLTIzLjAzNC0yMy4wMzQtMjMuMDM0DQoJCUMxOS4yMDQsMS43MTYsMTIuNDQ1LDUuMTY3LDguMTQzLDEwLjgwNHoiLz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjwvc3ZnPg0K";
         this.loadingIconBase64 = "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDI0LjAuMywgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDYuMDAgQnVpbGQgMCkgIC0tPgo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkxheWVyXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IgoJIHZpZXdCb3g9IjAgMCAyNCAyNCIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgMjQgMjQ7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4KPHN0eWxlIHR5cGU9InRleHQvY3NzIj4KCS5zdDB7ZmlsbDpub25lO30KCS5zdDF7ZmlsbDojRkZGRkZGO30KCS5zdDJ7b3BhY2l0eTowLjQ0O2ZpbGw6I0ZGRkZGRjtlbmFibGUtYmFja2dyb3VuZDpuZXcgICAgO30KCS5zdDN7b3BhY2l0eTowLjkzO2ZpbGw6I0ZGRkZGRjt9Cgkuc3Q0e29wYWNpdHk6MC4zNztmaWxsOiNGRkZGRkY7ZW5hYmxlLWJhY2tncm91bmQ6bmV3ICAgIDt9Cgkuc3Q1e29wYWNpdHk6MC43OTtmaWxsOiNGRkZGRkY7ZW5hYmxlLWJhY2tncm91bmQ6bmV3ICAgIDt9Cgkuc3Q2e29wYWNpdHk6MC4yMztmaWxsOiNGRkZGRkY7ZW5hYmxlLWJhY2tncm91bmQ6bmV3ICAgIDt9Cgkuc3Q3e29wYWNpdHk6MC42NTtmaWxsOiNGRkZGRkY7ZW5hYmxlLWJhY2tncm91bmQ6bmV3ICAgIDt9Cgkuc3Q4e29wYWNpdHk6OS4wMDAwMDBlLTAyO2ZpbGw6I0ZGRkZGRjtlbmFibGUtYmFja2dyb3VuZDpuZXcgICAgO30KCS5zdDl7b3BhY2l0eTowLjUxO2ZpbGw6I0ZGRkZGRjtlbmFibGUtYmFja2dyb3VuZDpuZXcgICAgO30KCS5zdDEwe29wYWNpdHk6MDtmaWxsOiNGRkZGRkY7ZW5hYmxlLWJhY2tncm91bmQ6bmV3ICAgIDt9Cgkuc3QxMXtvcGFjaXR5OjAuNzI7ZmlsbDojRkZGRkZGO2VuYWJsZS1iYWNrZ3JvdW5kOm5ldyAgICA7fQoJLnN0MTJ7b3BhY2l0eTowLjE2O2ZpbGw6I0ZGRkZGRjtlbmFibGUtYmFja2dyb3VuZDpuZXcgICAgO30KCS5zdDEze29wYWNpdHk6MC44NjtmaWxsOiNGRkZGRkY7ZW5hYmxlLWJhY2tncm91bmQ6bmV3ICAgIDt9Cgkuc3QxNHtvcGFjaXR5OjAuMztmaWxsOiNGRkZGRkY7ZW5hYmxlLWJhY2tncm91bmQ6bmV3ICAgIDt9Cgkuc3QxNXtvcGFjaXR5OjAuNTg7ZmlsbDojRkZGRkZGO2VuYWJsZS1iYWNrZ3JvdW5kOm5ldyAgICA7fQoJLnN0MTZ7b3BhY2l0eToyLjAwMDAwMGUtMDI7ZmlsbDojRkZGRkZGO2VuYWJsZS1iYWNrZ3JvdW5kOm5ldyAgICA7fQo8L3N0eWxlPgo8cmVjdCBjbGFzcz0ic3QwIiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiLz4KPGNpcmNsZSBjbGFzcz0ic3QxIiBjeD0iMTIiIGN5PSIzIiByPSIxLjIiLz4KPGNpcmNsZSBjbGFzcz0ic3QyIiBjeD0iMTIiIGN5PSIyMSIgcj0iMS4yIi8+CjxjaXJjbGUgY2xhc3M9InN0MyIgY3g9IjguNCIgY3k9IjMuNyIgcj0iMS4yIi8+CjxjaXJjbGUgY2xhc3M9InN0NCIgY3g9IjE1LjYiIGN5PSIyMC4zIiByPSIxLjIiLz4KPGNpcmNsZSBjbGFzcz0ic3Q1IiBjeD0iMy42IiBjeT0iOC43IiByPSIxLjIiLz4KPGNpcmNsZSBjbGFzcz0ic3Q2IiBjeD0iMjAuNCIgY3k9IjE1LjMiIHI9IjEuMiIvPgo8Y2lyY2xlIGNsYXNzPSJzdDciIGN4PSIzLjciIGN5PSIxNS42IiByPSIxLjIiLz4KPGNpcmNsZSBjbGFzcz0ic3Q4IiBjeD0iMjAuMyIgY3k9IjguNCIgcj0iMS4yIi8+CjxjaXJjbGUgY2xhc3M9InN0OSIgY3g9IjguNyIgY3k9IjIwLjQiIHI9IjEuMiIvPgo8Y2lyY2xlIGNsYXNzPSJzdDEwIiBjeD0iMTUuMyIgY3k9IjMuNiIgcj0iMS4zIi8+CjxjaXJjbGUgY2xhc3M9InN0MTEiIGN4PSIzIiBjeT0iMTIiIHI9IjEuMiIvPgo8Y2lyY2xlIGNsYXNzPSJzdDEyIiBjeD0iMjEiIGN5PSIxMiIgcj0iMS4yIi8+CjxjaXJjbGUgY2xhc3M9InN0MTMiIGN4PSI1LjYiIGN5PSI1LjYiIHI9IjEuMiIvPgo8Y2lyY2xlIGNsYXNzPSJzdDE0IiBjeD0iMTguNCIgY3k9IjE4LjQiIHI9IjEuMiIvPgo8Y2lyY2xlIGNsYXNzPSJzdDE1IiBjeD0iNS42IiBjeT0iMTguNCIgcj0iMS4yIi8+CjxjaXJjbGUgY2xhc3M9InN0MTYiIGN4PSIxOC40IiBjeT0iNS42IiByPSIxLjIiLz4KPC9zdmc+Cg==";
         this.audioOnlyButtonBase64 = "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDIxLjEuMCwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDYuMDAgQnVpbGQgMCkgIC0tPgo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkxheWVyXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IgoJIHZpZXdCb3g9IjAgMCAxMTAwIDExMDAiIHN0eWxlPSJlbmFibGUtYmFja2dyb3VuZDpuZXcgMCAwIDExMDAgMTEwMDsiIHhtbDpzcGFjZT0icHJlc2VydmUiPgo8Zz4KCTxwYXRoIGZpbGw9IiNGRkZGRkYiIGQ9Ik03NTIuMiw1NzQuNmgtMTkuNmMtOC41LDAtMTUuNSw3LTE1LjUsMTUuNXYyOTYuOWMwLDguNSw3LDE1LjUsMTUuNSwxNS41aDE5LjZjOC41LDAsMTUuNS03LDE1LjUtMTUuNVY1OTAuMQoJCUM3NjcuNyw1ODEuNiw3NjAuNyw1NzQuNiw3NTIuMiw1NzQuNnoiLz4KCTxwYXRoIGZpbGw9IiNGRkZGRkYiIGQ9Ik05MDIuMSw2NDkuMVY2NDFjMC05LTMuMS0xNy40LTguNC0yNC43di01My44Yy0xLjItNDcuMy0xMC4xLTkwLjgtMjUuMS0xMjkuOGw0LjctMi41YzYuNS0zLjUsOS0xMS40LDUuOC0xOGwtMy4yLTYuNgoJCWwtNS40LTExYy0zMC44LTYxLjktNzgtMTEyLjktMTM2LjktMTQ3Ljd2LTAuMWwtMTUuNi04LjhsLTAuMiwwLjJjLTUwLjktMjYuNy0xMDcuOS00MC43LTE2NS42LTQwLjcKCQljLTU5LjQsMC0xMTUuMiwxMy42LTE2NS45LDQwLjRsLTAuMS0wLjFsLTQuNiwyLjdjLTAuNywwLjQtMTAuOCw2LTEwLjgsNnYwLjNjLTU4LjEsMzQuNy0xMDUuMiw4NS45LTEzNi4zLDE0OC41bC01LjQsMTFsLTMsNS45CgkJYy0zLjMsNi42LTAuOCwxNC42LDUuNywxOC4xbDQuNiwyLjVjLTE1LjYsNDAuMS0yNC42LDgzLjgtMjUuNywxMjkuN2gwLjF2NDguNmMtOCw4LjMtMTIuNywxOC42LTEyLjcsMjkuOHY4LjIKCQljLTE0LjYsNS45LTI3LjksMTUtMjcuOSwyNS4zdjEyOC40YzAsMTAuNCwxMy4zLDE5LjUsMjcuOSwyNS4zdjguMWMwLDI3LjQsMjguNCw0OS44LDYzLjYsNDkuOGgyNC42YzgsMCwxNC41LTYuNSwxNC41LTE0LjVWNjA1LjcKCQljMC04LTYuNS0xNC41LTE0LjUtMTQuNWgtMjQuNmMtNi45LDAtMTMuNiwwLjktMTkuOCwyLjV2LTMxLjJjMS4xLTQwLjYsOC42LTc5LjMsMjEuOC0xMTVsMS42LDAuOWM3LDMuOCwxNS43LDAuOCwxOC45LTYuNAoJCWw0LjEtOS4yYzIzLTUxLjQsNTguNS05NC40LDEwMi43LTEyNC44bDYuMS0zLjljNDYuNS0zMC4xLDk4LjctNDUuNCwxNTUuMS00NS40YzU2LjQsMCwxMDguNiwxNS4zLDE1NSw0NS40bDUuNSwzLjYKCQljNDQuNiwzMC40LDgwLjIsNzMuNiwxMDMuMywxMjUuMmw0LjEsOS4yYzMuMiw3LjIsMTEuOSwxMC4yLDE4LjksNi41bDEuNy0wLjljMTMuMSwzNS43LDIwLjcsNzQuNCwyMS44LDExNXYzMi40CgkJYy03LjUtMi40LTE1LjctMy44LTI0LjMtMy44aC0yNC43Yy04LDAtMTQuNSw2LjUtMTQuNSwxNC41djI2Ni42YzAsOCw2LjUsMTQuNSwxNC41LDE0LjVoMjQuN2MzNS4zLDAsNjMuOC0yMi4zLDYzLjgtNDkuOXYtOC44CgkJYzE0LjYtNS44LDI3LjktMTQuOSwyNy45LTI1LjRWNjc0LjRDOTMwLDY2NC4xLDkxNi43LDY1NSw5MDIuMSw2NDkuMXoiLz4KCTxwYXRoIGZpbGw9IiNGRkZGRkYiIGQ9Ik0zNjYuNSw1NzQuNkgzNDdjLTguNSwwLTE1LjUsNy0xNS41LDE1LjV2Mjk2LjljMCw4LjUsNywxNS41LDE1LjUsMTUuNWgxOS41YzguNSwwLDE1LjUtNywxNS41LTE1LjVWNTkwLjEKCQlDMzgyLDU4MS42LDM3NSw1NzQuNiwzNjYuNSw1NzQuNnoiLz4KPC9nPgo8L3N2Zz4K"
+    }
+
+    updateBackgroundImageToScreenshot(){
+        var setBackground = (url) => {
+            this.wrapper.style.backgroundImage =  `url("${url}")`;
+        };
+
+        if (this.currentTime > 0){
+            var videoScreenshotImage = this.getScreenshot(this.video);
+            setBackground(videoScreenshotImage.src);
+
+        }else{
+            setBackground(this.options.poster);
+        }
+    }
+
+    getScreenshot(videoEl, scale) {
+        scale = scale || 1;
+    
+        var canvas = document.createElement("canvas");
+        canvas.width = videoEl.clientWidth * scale;
+        canvas.height = videoEl.clientHeight * scale;
+        canvas.getContext('2d').drawImage(videoEl, 0, 0, canvas.width, canvas.height);
+    
+        var image = new Image();
+        image.setAttribute('crossOrigin', 'anonymous');
+        image.src = canvas.toDataURL('image/jpeg');
+        return image;
     }
 }
 var vidOptions = {
