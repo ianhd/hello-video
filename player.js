@@ -35,7 +35,8 @@ class Player {
             preload: "metadata",
             playsinline: true,
             poster: this.options.poster,
-            autoplay: this.options.autoplay
+            autoplay: this.options.autoplay,
+            controls: false,
         };
 
         Object.assign(video, videoOptions);
@@ -90,7 +91,7 @@ class Player {
         this.progressBar.style.backgroundImage = `-webkit-gradient(linear, left top, right top, color-stop(${percent}%, ${inputRangeForegroundColor}), color-stop(${percent}%, ${inputRangeBackgroundColor}))`;
         this.progressBar.style.backgroundImage = `-moz-linear-gradient(left center, ${inputRangeForegroundColor} 0%, ${inputRangeBackgroundColor} ${percent}%, ${inputRangeBackgroundColor} ${percent}%, ${inputRangeBackgroundColor} 100%)`;
     }  
-    
+
     displayControls() {
         if (this.isAudioMode()) return;
 
@@ -228,6 +229,12 @@ class Player {
                 .audioOnly .goBackToVideo .container .goBackToVideoButton .goBackToVideoIcon { height: 20px; }
                 .audioOnly .goBackToVideo .container .goBackToVideoButton span { margin-left: 10px; position: relative; top: -4px; }
                 .audioOnly .mainControls { display: none; } 
+
+                @media only screen and (max-width: 768px) {
+                    .audioOnly .goBackToVideo .container { width: 90%; margin-top: 20px; }
+                    .audioOnly .goBackToVideo .container .goBackToVideoButton { margin-top: 15px; }
+                    .audioOnly .goBackToVideo .container .audioOnlyIcon { display: none; } 
+                }
             </style>
             <div id="${this.elementId}-controls">
                 <div class="mainControls">
@@ -389,12 +396,16 @@ class Player {
             this.wrapper.style.backgroundImage =  `url("${url}")`;
         };
 
-        if (this.currentTime > 0){
-            var videoScreenshotImage = this.getScreenshot(this.video);
-            setBackground(videoScreenshotImage.src);
-
-        }else{
-            setBackground(this.options.poster);
+        try{
+            if (this.currentTime > 0){
+                var videoScreenshotImage = this.getScreenshot(this.video);
+                setBackground(videoScreenshotImage.src);
+    
+            }else{
+                setBackground(this.options.poster);
+            }
+        }catch{
+            //poster is set by default as background, it will be shown on this scenario
         }
     }
 
