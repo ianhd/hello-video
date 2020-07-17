@@ -59,10 +59,6 @@ class Player {
         this.video.addEventListener("play", function(){
             that.playButton.style.display = 'none';
             that.pauseButton.style.display = 'inline-block';
-
-            if (that.loadingIcon.style.display == 'inline-block'){
-                that.loadingIcon.style.display = 'none';
-            }
         });
 
         this.video.addEventListener("pause", function(){
@@ -81,6 +77,10 @@ class Player {
     
                 that.progressBar.value = progressInPercentage;
                 that.updateProgressBar(progressInPercentage);
+
+                if (that.loadingIcon.style.display == 'inline-block'){
+                    that.loadingIcon.style.display = 'none';
+                }
             }
         });
     }
@@ -231,7 +231,7 @@ class Player {
                 .audioOnly .mainControls { display: none; } 
 
                 @media only screen and (max-width: 768px) {
-                    .audioOnly .goBackToVideo .container { width: 90%; margin-top: 60px; }
+                    .audioOnly .goBackToVideo .container { width: 90%; margin-top: 40px; }
                     .audioOnly .goBackToVideo .container .goBackToVideoButton { margin-top: 15px; }
                     .audioOnly .goBackToVideo .container .audioOnlyIcon { display: none; } 
                 }
@@ -378,6 +378,7 @@ class Player {
 
     showLoadingIconIfNeeded(){
         if (!this.playedAtLeastOnce){
+            this.displayControls();
             this.playedAtLeastOnce = true;
             this.pauseButton.style.display = 'none';
             this.playButton.style.display = 'none';
