@@ -231,7 +231,7 @@ class Player {
                 .audioOnly .mainControls { display: none; } 
 
                 @media only screen and (max-width: 768px) {
-                    .audioOnly .goBackToVideo .container { width: 90%; margin-top: 20px; }
+                    .audioOnly .goBackToVideo .container { width: 90%; margin-top: 60px; }
                     .audioOnly .goBackToVideo .container .goBackToVideoButton { margin-top: 15px; }
                     .audioOnly .goBackToVideo .container .audioOnlyIcon { display: none; } 
                 }
