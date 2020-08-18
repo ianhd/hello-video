@@ -31,15 +31,11 @@ class Player {
     createVideo(){
         var video = document.createElement("video");
         video.setAttribute('crossOrigin', 'anonymous');
-        var videoOptions = {
-            preload: "metadata",
-            playsinline: true,
-            poster: this.options.poster,
-            autoplay: this.options.autoplay,
-            controls: false,
-        };
-
-        Object.assign(video, videoOptions);
+        video.setAttribute('playsinline', '');
+        video.setAttribute('preload', 'metadata');
+        video.setAttribute('poster', this.options.poster);
+        if (this.options.autoplay)
+            video.setAttribute('autoplay', '');
         this.video = video;
         this.wrapper.appendChild(this.video);
     }
@@ -437,7 +433,7 @@ var vidOptions = {
         }
     ],
     skipText: 'SKIP to Full Message',
-    skipTextMobile: "SKIP (Mobile)"
+    skipTextMobile: "SKIP"
 };  
 new Player("player", vidOptions);
 
