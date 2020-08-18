@@ -46,6 +46,7 @@ class Player {
         var controlWrapper = document.getElementById(`${this.elementId}-controls`);
         var durationCtrl = controlWrapper.querySelector(`[data-text='duration']`);
         this.video.addEventListener("loadedmetadata", function(e) {
+            that.debug("loadedmetadata");
             var videoHeight = e.currentTarget.offsetHeight;
             controlWrapper.style.height = videoHeight + "px";
             that.wrapper.style.height = videoHeight + "px"; // for good measure, also set height of wrapping div around this whole thing
@@ -53,11 +54,13 @@ class Player {
         }, false);  
 
         this.video.addEventListener("play", function(){
+            that.debug("play");
             that.playButton.style.display = 'none';
             that.pauseButton.style.display = 'inline-block';
         });
 
         this.video.addEventListener("pause", function(){
+            that.debug("pause");
             that.pauseButton.style.display = 'none';
             that.playButton.style.display = 'inline-block';
         });
@@ -65,6 +68,7 @@ class Player {
         //configProgress
         var currentTimeCtrl = this.wrapper.querySelector(`[data-text='currentTime']`);
         this.video.addEventListener("timeupdate", function(e) {
+            that.debug('timeupdate');
             if (that.video.currentTime && that.video.duration){
                 currentTimeCtrl.innerHTML = that.timeToFriendly(e.currentTarget.currentTime);
 
@@ -74,9 +78,8 @@ class Player {
                 that.progressBar.value = progressInPercentage;
                 that.updateProgressBar(progressInPercentage);
 
-                if (that.loadingIcon.style.display == 'inline-block'){
-                    that.loadingIcon.style.display = 'none';
-                }
+                // hide loading just in case it's visible
+                that.loadingIcon.style.display = 'none';
             }
         });
     }
@@ -87,7 +90,16 @@ class Player {
         this.progressBar.style.backgroundImage = `-webkit-gradient(linear, left top, right top, color-stop(${percent}%, ${inputRangeForegroundColor}), color-stop(${percent}%, ${inputRangeBackgroundColor}))`;
         this.progressBar.style.backgroundImage = `-moz-linear-gradient(left center, ${inputRangeForegroundColor} 0%, ${inputRangeBackgroundColor} ${percent}%, ${inputRangeBackgroundColor} ${percent}%, ${inputRangeBackgroundColor} 100%)`;
     }  
-
+    // updateState(state) {
+    //     switch(state) {
+    //         case "loading":
+    //             break;
+    //         case "playing":
+    //             break;
+    //         case "paused":
+    //             break;
+    //     }
+    // }    
     displayControls() {
         if (this.isAudioMode()) return;
 
@@ -176,8 +188,8 @@ class Player {
             this.playedAtLeastOnce = false;
             this.showLoadingIconIfNeeded();
             that.video.play();
-            var playButton = document.querySelector("[data-action='play']");
-            that.swapControls(playButton);
+            // var playButton = document.querySelector("[data-action='play']");
+            // that.swapControls(playButton);
         });
     }
 
@@ -277,14 +289,10 @@ class Player {
                 
                 switch(action) {
                     case "play":
+                        this.video.play();
+                        break;
                     case "pause":
-                        this.swapControls(button);
-                        if (this.video.paused) {
-                            this.showLoadingIconIfNeeded();
-                            this.video.play();
-                        } else {
-                            this.video.pause();
-                        }
+                        this.video.pause();
                         break;
                     case "rewind":
                     case "fastForward":
@@ -332,7 +340,6 @@ class Player {
 
         this.wrapper.onmouseover = function(e) {
             that.displayControls();
-            that.debug('onmouseover ' + e.currentTarget.id);
         };
         this.wrapper.onmouseout = function(e) {
             //that.hideControls();
@@ -340,7 +347,7 @@ class Player {
         };        
         this.wrapper.addEventListener("touchstart", function(e) {
             that.displayControls();
-            that.debug('touchstart ' + e.currentTarget.id);
+            //that.debug('touchstart ' + e.currentTarget.id);
         },  {passive: true});  
 
         this.progressBar = this.wrapper.getElementsByClassName('progressBar')[0];
@@ -374,7 +381,6 @@ class Player {
 
     showLoadingIconIfNeeded(){
         if (!this.playedAtLeastOnce){
-            this.displayControls();
             this.playedAtLeastOnce = true;
             this.pauseButton.style.display = 'none';
             this.playButton.style.display = 'none';
