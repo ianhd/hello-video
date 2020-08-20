@@ -55,6 +55,8 @@ class Player {
 
         this.video.addEventListener("play", function(){
             that.debug("play");
+            that.pauseButton.style.display = 'inline-block';
+            that.playButton.style.display = 'none'; 
             that.showLoadingIconIfNeeded();
         });
 
@@ -70,12 +72,16 @@ class Player {
             that.debug('timeupdate');
 
             // video is currently PLAYING, so adjust controls accordingly
-            that.playedAtLeastOnce = true;
-            that.pauseButton.style.display = 'inline-block';
-            that.playButton.style.display = 'none';
-            that.rewindButton.style.visibility = 'visible';
-            that.fastForwardButton.style.display = 'inline-block';
-            that.loadingIcon.style.display = 'none';            
+            if (that.loading) {
+                that.hideControls();
+                that.loading = false;
+                that.playedAtLeastOnce = true;
+                that.pauseButton.style.display = 'inline-block';
+                that.playButton.style.display = 'none';
+                that.rewindButton.style.display = 'inline-block';
+                that.fastForwardButton.style.display = 'inline-block';
+                that.loadingIcon.style.display = 'none';                 
+            }
             
             // TODO: do we really need to have the following if condition check?
             if (that.video.currentTime && that.video.duration){
@@ -112,6 +118,7 @@ class Player {
         this.addClassToWrapper("hover");
         if (this.timeoutId) clearTimeout(this.timeoutId); // clear any previous timeout
         this.timeoutId = setTimeout(() => {
+            if (this.loading) return; // if this is loading, continue to display the loading icon
             this.hideControls();
         }, 2500);
     }
@@ -386,11 +393,12 @@ class Player {
 
     showLoadingIconIfNeeded(){
         if (!this.playedAtLeastOnce){
+            this.loading = true;
             this.pauseButton.style.display = 'none';
             this.playButton.style.display = 'none';
-            this.rewindButton.style.visibility = 'hidden';
+            this.rewindButton.style.display = 'none';
             this.fastForwardButton.style.display = 'none';
-            this.loadingIcon.style.display = 'inline-block'
+            this.loadingIcon.style.display = 'inline-block';
         }
     }
 
