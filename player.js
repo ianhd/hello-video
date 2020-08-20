@@ -360,8 +360,7 @@ class Player {
         };        
         this.wrapper.addEventListener("touchstart", function(e) {
             that.displayControls();
-            //that.debug('touchstart ' + e.currentTarget.id);
-        },  {passive: true});  
+        },  {passive: false});  
 
         this.progressBar = this.wrapper.getElementsByClassName('progressBar')[0];
         this.progressBar.addEventListener("input", () => {
