@@ -80,6 +80,8 @@ class Player {
                 that.playButton.style.display = 'none';
                 that.rewindButton.style.display = 'inline-block';
                 that.fastForwardButton.style.display = 'inline-block';
+                that.upperRightControls.style.display = 'inline-block';
+                that.bottomControls.style.display = 'flex';
                 that.loadingIcon.style.display = 'none';                 
             }
             
@@ -350,6 +352,7 @@ class Player {
 
         this.wrapper.onmouseover = function(e) {
             that.displayControls();
+            that.debug("onmouseover");
         };
         this.wrapper.onmouseout = function(e) {
             //that.hideControls();
@@ -379,6 +382,8 @@ class Player {
         this.audio = document.getElementById(this.elementId + '-audio');
         this.audioSource = document.getElementById(this.elementId + '-audio-source');
         this.audioOnlyButton = document.getElementById(this.elementId+ '-audioOnly-button');
+        this.upperRightControls = document.getElementsByClassName("upperRight")[0];
+        this.bottomControls = document.getElementsByClassName("bottom")[0];
 
         this.audio.addEventListener("timeupdate", function(){
             that.currentTime = that.audio.currentTime;
@@ -398,6 +403,8 @@ class Player {
             this.playButton.style.display = 'none';
             this.rewindButton.style.display = 'none';
             this.fastForwardButton.style.display = 'none';
+            this.upperRightControls.style.display = "none";
+            this.bottomControls.style.display = "none";
             this.loadingIcon.style.display = 'inline-block';
         }
     }
