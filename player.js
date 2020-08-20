@@ -453,7 +453,7 @@ var vidOptions = {
         }
     ],
     skipText: 'SKIP to Full Message',
-    skipTextMobile: "SKIP"
+    skipTextMobile: "SKIP to Full Me55age"
 };  
 new Player("player", vidOptions);
 
