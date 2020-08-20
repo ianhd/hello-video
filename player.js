@@ -190,7 +190,7 @@ class Player {
         
         var skipText = (this.isMobile() ? this.options.skipTextMobile : this.options.skipText) || "SKIP";
         this.wrapper.insertAdjacentHTML('beforeend', `
-            <div id="${this.elementId}-skip" style="cursor:default;color: white;font-size:13px;position:absolute;bottom:40px;right:20px;padding:10px 12px 9px 12px;background:#333;border-radius:3px;">
+            <div id="${this.elementId}-skip" style="padding:100px;cursor:default;color: white;font-size:13px;position:absolute;bottom:40px;right:20px;/*padding:10px 12px 9px 12px;*/background:#333;border-radius:3px;">
                 <span style="display:inline-block;float:left;margin-right:8px;">${skipText}</span><img style="width:15px;margin-top:2px" src="https://content.swncdn.com/videoplayer/next_white.svg?v=1" />
             </div>
         `);
