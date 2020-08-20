@@ -208,7 +208,7 @@ class Player {
         this.wrapper.insertAdjacentHTML('beforeend', `
             <style>
                 [data-action] { cursor: pointer; }
-                #${this.elementId}-controls { position:absolute;top:0;left:0;width:100%; transition: background .25s ease-in-out }
+                #${this.elementId}-controls { transition: background .25s ease-in-out }
                 #${this.elementId}.hover #${this.elementId}-controls { background:rgba(0,0,0,.3); }
                 #${this.elementId}-controls .op-0 { opacity:0; transition: opacity .25s ease-in-out; }
                 #${this.elementId}.hover #${this.elementId}-controls .op-0 { opacity:0.5; }
