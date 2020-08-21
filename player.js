@@ -202,6 +202,7 @@ class Player {
 
         var that = this;
         document.getElementById(`${this.elementId}-skip`).addEventListener("click", (event) => {
+            alert('touch');
             that.setSource(1);
             event.currentTarget.style.display = 'none';
             
