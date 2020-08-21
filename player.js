@@ -201,6 +201,7 @@ class Player {
         }
 
         var that = this;
+        
         document.getElementById(`${this.elementId}-skip`).addEventListener("click", (event) => {
             alert('touch');
             that.setSource(1);
@@ -209,6 +210,8 @@ class Player {
             this.playedAtLeastOnce = false;
             that.video.play();
         });
+
+        document.getElementById(`${this.elementId}-skip`).focus();
     }
 
     addControls() {
