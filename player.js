@@ -195,14 +195,12 @@ class Player {
             </div>
         `);
 
-        var event = "click";
-        if (this.isMobile()){
-            event = "touchstart";
-        }
+        var skipButtonEvent = "click";
+        if (this.isMobile()) skipButtonEvent = "touchstart";
 
         var that = this;
         
-        document.getElementById(`${this.elementId}-skip`).addEventListener(event, (event) => {
+        document.getElementById(`${this.elementId}-skip`).addEventListener(skipButtonEvent, (event) => {
             that.setSource(1);
             event.currentTarget.style.display = 'none';
             
