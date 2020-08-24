@@ -55,6 +55,7 @@ class Player {
         }, false);  
 
         this.video.addEventListener("play", function() {
+            that.callOnSourcePlay();
             that.debug("play");
             that.pauseButton.style.display = 'inline-block';
             that.playButton.style.display = 'none'; 
@@ -143,6 +144,7 @@ class Player {
     }
     setSource(index) {
         var source = this.options.sources[index];
+        this.currentSource = source;
         this.video.setAttribute("src", source.src);
 
         if (source.mp3Url){
@@ -154,6 +156,13 @@ class Player {
             this.audioOnlyButton.style.visibility = "hidden";
         }
     }
+
+    callOnSourcePlay() {
+        if (this.options && this.options.onSourcePlay && this.currentSource) {
+            this.options.onSourcePlay(this.currentSource, this.isAudioMode());
+        }
+    }
+
     isMobile() {
         return window.matchMedia("only screen and (max-width: 760px)").matches;
     }
@@ -393,6 +402,10 @@ class Player {
         this.audio.addEventListener("timeupdate", function(){
             that.currentTime = that.audio.currentTime;
         });
+
+        this.audio.addEventListener("play", function(){
+            that.callOnSourcePlay();
+        });
     }
     addLoadingIcon(){
         this.wrapper.insertAdjacentHTML('beforeend', `<div id="${this.elementId}-loading-icon" style="display:none; position: absolute; top: 0; left: 0; width:100%; height: 100%;"><img style="width:90px; margin:auto; -webkit-animation: rotation 1.25s infinite linear;" class="mx-30 op-0 loading" src="data:image/svg+xml;base64,${this.loadingIconBase64}"></div>`)   
@@ -456,6 +469,9 @@ class Player {
         return image;
     }
 }
+
+var myEpisodeId = 1120;
+
 var vidOptions = {
     autoplay: false,
     poster: 'https://zcast.swncdn.com/episodes/zcast/the-alternative/2020/06-28/829406/801_20206264470004.jpg',
@@ -464,12 +480,21 @@ var vidOptions = {
             src: 'https://zcast.swncdn.com/episodes/zcast/gateway-church/2020/04-26/816286/1046_202042445030-c.mp4' // clip
         },
         { 
+            episodeId: myEpisodeId,
             src: 'https://zcast.swncdn.com/episodes/zcast/greg-laurie-tv/2020/01-05/801572/802_2020128121316.mp4',
             mp3Url: 'https://zcast.swncdn.com/episodes/zcast/greg-laurie-tv/2020/01-05/801572/802_2020128121316.mp3'
         }
     ],
     skipText: 'SKIP to Full Message',
-    skipTextMobile: "SKIP to Full Me55age"
+    skipTextMobile: "SKIP to Full Me55age",
+    onSourcePlay: function(source, isAudioMode){
+        
+        if (source.episodeId == myEpisodeId){
+            console.debug('myEpisodeId onSourcePlay: isAudioMode: ' + isAudioMode);
+        }else {
+            console.debug('onSourcePlay: ' + source.src + ' ... is AudioModel:' + isAudioMode);
+        }
+    }
 };  
 new Player("player", vidOptions);
 
