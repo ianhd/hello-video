@@ -55,7 +55,7 @@ class Player {
         }, false);  
 
         this.video.addEventListener("play", function() {
-            that.callOnSourcePlay();
+            that.callOnPlay();
             that.debug("play");
             that.pauseButton.style.display = 'inline-block';
             that.playButton.style.display = 'none'; 
@@ -157,7 +157,7 @@ class Player {
         }
     }
 
-    callOnSourcePlay() {
+    callOnPlay() {
         if (this.options && this.options.onSourcePlay && this.currentSource) {
             this.options.onSourcePlay(this.currentSource, this.isAudioMode());
         }
@@ -404,7 +404,7 @@ class Player {
         });
 
         this.audio.addEventListener("play", function(){
-            that.callOnSourcePlay();
+            that.callOnPlay();
         });
     }
     addLoadingIcon(){
@@ -487,7 +487,7 @@ var vidOptions = {
     ],
     skipText: 'SKIP to Full Message',
     skipTextMobile: "SKIP to Full Me55age",
-    onSourcePlay: function(source, isAudioMode){
+    onPlay: function(source, isAudioMode){
         
         if (source.episodeId == myEpisodeId){
             console.debug('myEpisodeId onSourcePlay: isAudioMode: ' + isAudioMode);
